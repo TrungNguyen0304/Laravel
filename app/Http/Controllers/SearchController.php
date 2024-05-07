@@ -14,19 +14,16 @@ class SearchController extends Controller
      */
     public function index(Request $request)
     {
-        // $query = $request->input('search');
+        $query = $request->input('search');
 
-        // $results = Product::where('name', 'LIKE', "%$query%")->get(); // Thay 'name' bằng cột bạn muốn tìm kiếm trong model của bạn
+        // Sắp xếp theo giá tăng dần
+        $productSearch = ModelsProduct::where('name', 'LIKE', "%$query%")
+            ->orderBy('price')
+            ->paginate(4);
 
-        // return view('home.search', compact('results'));
+        $productSearch->appends(['search' => $query]); // Thêm tham số query vào phân trang
 
-
-        
-        
-            $query = $request->input('search');
-            $productSearch = ModelsProduct::where('name', 'LIKE', "%$query%")->get();
-            // $productSearch = ModelsProduct::where('name', 'LIKE', '%$query%')->get(); ko loi nhung ko show dc
-            return view('home.search', compact('productSearch'));
+        return view('home.search', compact('productSearch'));
     }
 
     /**
@@ -95,4 +92,3 @@ class SearchController extends Controller
         //
     }
 }
-

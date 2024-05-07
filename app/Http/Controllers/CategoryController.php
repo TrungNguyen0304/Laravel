@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Category;
 
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -14,7 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Category::all();
+        $categories = Category::all();
+        return view('categories.show', compact('categories'));
     }
 
     /**
@@ -46,8 +48,13 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        return Category::findOrFail($id);
+        $categories = Product::where('category_id', $id)->get();
+       
+        return view('home.showById', compact('categories'));
+
+      
     }
+
 
     /**
      * Show the form for editing the specified resource.

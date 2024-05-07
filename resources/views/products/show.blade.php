@@ -5,69 +5,124 @@
 <!-- được sử dụng để định nghĩa một phần nào đó của nội dung của trang web -->
 
 @section('content')
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Shop Detail</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Shop Detail</p>
+        </div>
+    </div>
+</div>
 
-<div class="small-container single-product">
-    <div class="row">
-        <div class="col-2">
-            <img src="{{ url($product->image)}}" width="100%" id="productimg">
-            <div class="small-img-row">
-                <!-- <div class="small-img-col">
-                    <img src="{{$product->image}}" width="100%" class="small-img">
+<!-- Shop Detail Start -->
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner border">
+                    <div class="carousel-item active">
+                        <img class="w-100 h-100" src="{{ url($product->image)}}" alt="Image">
+                    </div>
                 </div>
-                <div class="small-img-col">
-                    <img src="{{$product->image}}" width="100%" class="small-img">
-                </div>
-                <div class="small-img-col">
-                    <img src="{{$product->image}}" width="100%" class="small-img">
-                </div>
-                <div class="small-img-col">
-                    <img src="{{$product->image}}" width="100%" class="small-img">
-                </div> -->
             </div>
         </div>
-        <div class="col-2">
-            <p>Home / T-Shirt</p>
-            <h1>{{$product->name}}</h1>
-            <h4>{{$product->price}}</h4>
-            <select name="" id="">
-                <option value="">Select Size</option>
-                <option value="">XXL</option>
-                <option value="">XL</option>
-                <option value="">Large</option>
-                <option value="">Medium</option>
-                <option value="">Small</option>
-            </select>
-            <input type="number" value="1">
-            <a href="cart.html" class="btn">Add TO Card</a>
-            </br>
-            </br>
-            </br>
 
-            <h3>Products Drtails <i class="fa fa-ident"></i></h3>
-            </br>
-            <p>{{$product->description}}</p>
+        <div class="col-lg-7 pb-5">
+            <h3 class="font-weight-semi-bold">{{$product->name}}</h3>
+            <div class="d-flex mb-3">
+                <div class="text-primary mr-2">
+                    <small class="fas fa-star"></small>
+                    <small class="fas fa-star"></small>
+                    <small class="fas fa-star"></small>
+                    <small class="fas fa-star-half-alt"></small>
+                    <small class="far fa-star"></small>
+                </div>
+                <small class="pt-1">(50 Reviews)</small>
+            </div>
+            <h3 class="font-weight-semi-bold mb-4">{{$product->price}}</h3>
+            <p class="mb-4">{{$product->description}}</p>
+            <div class="d-flex mb-3">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
+                <form>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-1" name="size">
+                        <label class="custom-control-label" for="size-1">XS</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-2" name="size">
+                        <label class="custom-control-label" for="size-2">S</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-3" name="size">
+                        <label class="custom-control-label" for="size-3">M</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-4" name="size">
+                        <label class="custom-control-label" for="size-4">L</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-5" name="size">
+                        <label class="custom-control-label" for="size-5">XL</label>
+                    </div>
+                </form>
+            </div>
+            <div class="d-flex align-items-center mb-4 pt-2">
+                <input id="quantityInput" type="number" name="quantity" value="1" min="1" max="999" onchange="updateQuantity()">
+
+                <script>
+                    function updateQuantity() {
+                        var quantity = document.getElementById('quantityInput').value;
+                        document.getElementById('hiddenQuantity').value = quantity; // Cập nhật giá trị của trường ẩn
+                    }
+                </script>
+                <form id="addToCartForm" method="POST" action="{{ route('cart.add') }}">
+                    @csrf
+                    <!-- Thêm các trường ẩn để truyền product_id và quantity -->
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input id="hiddenQuantity" type="hidden" name="quantity" value="1"> <!-- Quantity mặc định là 1 -->
+
+                    <!-- Các trường của biểu mẫu ở đây -->
+
+                    <button class="btn btn-primary px-3" type="submit"><i class="fa fa-shopping-cart mr-1"></i>Thêm vào giỏ hàng</button>
+                </form>
+            </div>
+
+            <div class="d-flex pt-2">
+                <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+                <div class="d-inline-flex">
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-pinterest"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-pane-1">
+                    <h4 class="mb-3">Product Description</h4>
+                    <p>{{$product->description}}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-
-
-<!--------Title-------->
-<div class="small-container">
-    <div class="row row-2">
-        <h2>Related Products</h2>
-        <p>View More</p>
-    </div>
-</div>
-<!--------products------>
-<div class="small-container">
-    <h2 class="title">featured products</h2>
-    <div class="products"></div>
-
-    <div class=" row" id="product-list">
-
-
-    </div>
-</div>
+<!-- Shop Detail End -->
 
 @endsection

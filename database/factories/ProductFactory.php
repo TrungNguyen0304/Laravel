@@ -17,12 +17,13 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'image' => fake()->url(),
-            'name' => fake()->name(),
-            'description' => fake()->realText(),
-            'price' => fake()->randomDigit(),
-            'quantity' => fake()->randomDigit(),
+            'image' => $this->faker->url(),
+            'name' => $this->faker->name(),
+            'description' => $this->faker->realText(),
+            'price' => $this->faker->randomDigit(),
+            'quantity' => $this->faker->randomDigit(),
             'category_id' => 1,
+            'view' => 0, // Thêm trường view với giá trị mặc định là 0
         ];
     }
 }

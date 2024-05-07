@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Product as ProductHome;
 use Illuminate\Http\Request;
 
@@ -12,10 +13,34 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $productListHome = ProductHome::all();
-        return view('home.index',['productListHome' => $productListHome]);
+{
+    // Lấy 2 sản phẩm mới nhất và sắp xếp theo số thứ tự và sau đó theo giá tiền
+    $productListHome = ProductHome::latest()
+        ->take(4)
+        ->orderBy('price')
+        ->paginate(4); // Đổi từ get() sang paginate() và chỉ định số sản phẩm trên mỗi trang (ví dụ: 10)
+
+    // Lấy sản phẩm có lượt xem cao nhất và sắp xếp theo giá tiền
+    $topViewedProducts = ProductHome::orderBy('views', 'desc')
+        ->take(4)
+        ->get()
+        ->sortBy('price');
+
+    // Tính tổng số lượng sản phẩm trong giỏ hàng
+    $totalQuantity = 0;
+    $cart = session()->get('cart', []);
+    foreach ($cart as $item) {
+        $totalQuantity += $item['quantity'];
     }
+
+    return view('home.index', [
+        'productListHome' => $productListHome,
+        'topViewedProducts' => $topViewedProducts,
+        'totalQuantity' => $totalQuantity
+    ]);
+}
+
+    
 
     /**
      * Show the form for creating a new resource.

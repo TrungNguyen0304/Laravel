@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $productList = Product::all();
-        return view('products.index',['productList' => $productList]);
-        
-        
+        $productList = Product::paginate(6); // Số lượng sản phẩm trên mỗi trang, trong trường hợp này là 10
+        return view('products.index', ['productList' => $productList]);
     }
 
     /**
@@ -37,8 +36,34 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        return Product::create($request->all());
+        $query = Product::query();
+
+        // Add other filtering conditions here
+
+        if ($request->has('price_all') && $request->price_all == '1') {
+            // Nếu người dùng chọn "All Prices", không thêm bất kỳ điều kiện lọc nào về giá
+        } elseif ($request->has('price_range') && is_array($request->price_range)) {
+            $priceRanges = $request->price_range;
+            $query->where(function ($query) use ($priceRanges) {
+                foreach ($priceRanges as $range) {
+                    $priceLimits = explode('-', $range);
+                    if (count($priceLimits) == 2) {
+                        $query->orWhereBetween('price', [$priceLimits[0], $priceLimits[1]]);
+                    }
+                }
+            });
+        } elseif ($request->has('price_5_to_7')) {
+            // Thêm điều kiện cho giá từ $5 đến $7
+            $query->whereBetween('price', [5, 7]);
+        } else {
+            // Điều kiện mặc định cho giá nhỏ hơn $5
+            $query->where('price', '<', 5);
+        }
+
+        $productList = $query->paginate(6);
+        return view('products.index', compact('productList'));
     }
+
 
     /**
      * Display the specified resource.
@@ -48,9 +73,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product =Product::findOrFail($id);
-        return view('products.show',['product'=> $product]);
-        
+        $product = Product::findOrFail($id);
+        return view('products.show', ['product' => $product]);
     }
 
     /**
