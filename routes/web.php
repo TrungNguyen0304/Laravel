@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,7 @@ Route::resource('orderitems', OrderItemController::class);
 
 
 
+
 Route::resource('home', HomeController::class, ['names' => 'home']);
 Route::get('/search', 'App\Http\Controllers\SearchController@index')->name('search.search');
 Route::get('/categories/{id}', [CategoryController::class, 'showById'])->name('categories.showById');
@@ -39,6 +42,9 @@ Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.dele
 Route::put('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::get('/cart/item_count', 'CartController@getItemCount')->name('cart.item_count');
 Route::post('/products/store', 'ProductController@store');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+
 
 
 

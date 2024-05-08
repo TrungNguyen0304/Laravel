@@ -24,18 +24,19 @@
                     <tr>
                         <th>Products</th>
                         <th>Price</th>
-                        
+
                         <th>Total</th>
                         <th>Quantity</th>
                         <th>update</th>
                         <th>Remove</th>
-                       
+
                     </tr>
                 </thead>
                 <tbody class="align-middle">
                     @php
                     $totalAmount = 0; // Biến để lưu tổng số tiền
                     @endphp
+
                     @foreach($cart as $key => $item)
                     <tr>
                         <td class="align-middle">
@@ -43,7 +44,7 @@
                         </td>
                         <td class="align-middle">${{ $item['price'] }}</td>
                         <td class="align-middle">${{ $item['price'] * $item['quantity'] }}</td>
-                        
+
                         <td class="align-middle">
                             <form action="{{ route('cart.update', ['id' => $key]) }}" method="POST" class="update-form">
                                 @csrf
@@ -64,9 +65,9 @@
                                 <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button>
                             </form>
                         </td>
-                       
-                       
-                        
+
+
+
 
                     </tr>
                     @php
@@ -88,22 +89,26 @@
                         <h5 class="font-weight-bold">Total</h5>
                         <h5 class="font-weight-bold">${{ $totalAmount }}</h5> <!-- Hiển thị tổng số tiền -->
                     </div>
-                    <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+
+                    <form action="{{ route('checkout.index') }}" method="GET">
+                       
+                        <button type="submit" class="btn btn-block btn-primary my-3 py-3">Checkout</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                        <script>
-                            $(document).ready(function() {
-                                $('.update-btn').click(function() {
-                                    // Tìm form cập nhật số lượng sản phẩm gần nhất trong cùng một hàng
-                                    var form = $(this).closest('td').prev('td').find('.update-form');
-                                    // Gửi form đi
-                                    form.submit();
-                                });
-                            });
-                        </script>
+<script>
+    $(document).ready(function() {
+        $('.update-btn').click(function() {
+            // Tìm form cập nhật số lượng sản phẩm gần nhất trong cùng một hàng
+            var form = $(this).closest('td').prev('td').find('.update-form');
+            // Gửi form đi
+            form.submit();
+        });
+    });
+</script>
 <!-- Cart End -->
 @endsection
